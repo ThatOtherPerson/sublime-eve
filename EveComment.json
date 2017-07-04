@@ -1,0 +1,7 @@
+{
+  "name": "Eve Comments",
+  "scope": "source.eve",
+  "settings": {
+    "shellVariables": [{"name": "TM_COMMENT_START", "value": "// "}]
+  }
+}

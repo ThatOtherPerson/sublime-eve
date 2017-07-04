@@ -1,0 +1,7 @@
+{
+  "name": "Eve Indent",
+  "scope": "source.eve",
+  "settings": {
+    "increaseIndentPattern": "commit|bind"
+  }
+}

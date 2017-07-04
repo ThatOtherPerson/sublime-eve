@@ -1,0 +1,189 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - eve
+scope: source.eve
+
+variables:
+  identifierPattern: "[^\\s|\\[\\](){}\"',.:=#]+"
+  functionPattern: '([a-zA-Z][a-zA-Z0-9\-_\?!\/]*)'
+
+contexts:
+  main:
+    - match: '^(```|~~~)$'
+      scope: keyword.other.eve
+      push: block
+
+  block:
+    - meta_scope: meta.block.eve
+
+    - include: comment
+
+    - match: '^(```|~~~)$'
+      scope: keyword.other.eve
+      pop: true
+
+    - match: 'search'
+      scope: keyword.section.search.eve
+      push: search
+
+    - match: '\b(bind|commit)\b'
+      scope: keyword.section.action.eve
+      push: action
+
+  start_record:
+    - match: '\['
+      push: record
+
+  stop_record:
+    - match: '\]'
+      pop: true
+
+  start_function:
+    - match: '{{functionPattern}}(?=\[)'
+      scope: support.function.eve
+
+    - match: '(?={{functionPattern}})\['
+      push: record
+
+  start_not:
+    - match: 'not(?=\()'
+      scope: keyword.operator.eve
+    
+    - match: '(?<=not)\('
+      push: not
+
+  stop_not:
+    - match: '\)'
+      pop: true
+
+  start_string:
+    - match: '"'
+      scope: punctuation.definition.string.begin.eve
+      push: string
+
+  stop_string:
+    - match: '"'
+      scope: punctuation.definition.string.end.eve
+      pop: true
+
+  start_interpolation:
+    - match: '{{'
+      push: 'interpolation'
+
+  stop_interpolation:
+    - match: '}}'
+      pop: true
+
+  if_then_else:
+    - match: 'if|then|else'
+      scope: keyword.if.eve
+
+  number:
+    - match: '[-+]?(?:\.\d+|\d+\.?\d*)?'
+      scope: constant.numeric.eve
+
+  comment:
+    - match: '//.*'
+      scope: comment.line.eve
+
+  identifier:
+    - match: '{{identifierPattern}}'
+      scope: variable.other.eve
+
+  tag:
+    - match: "#{{identifierPattern}}"
+      scope: entity.name.type.eve
+
+  infix:
+    - match: '-|\+|/|\*'
+      scope: 'keyword.operator.infix.eve'
+
+  filter:
+    - match: '<|<=|>|>=|!=|='
+      scope: 'keyword.operator.filter.eve'
+
+  update:
+    - match: '\+=|-=|:=|<-'
+      scope: 'keyword.operator.update.eve'
+
+  misc_syntax:
+    - match: '[:.]'
+
+  constants:
+    - match: 'true|false'
+      scope: constant.language.eve
+
+  expr:
+    - include: number
+    - include: infix
+    - include: start_string
+    - include: start_function
+    - include: constants
+    - include: identifier
+
+  exit_clause:
+    - match: '(?=(search|bind|commit))'
+      pop: true
+
+  exit_block:
+    - match: '(?=^(```|~~~)$)'
+      scope: keyword.other.eve
+      pop: true
+
+  record:
+    - meta_scope: meta.record.eve
+    - include: comment
+    - include: stop_record
+    - include: start_record
+    - include: tag
+    - include: filter
+    - include: misc_syntax
+    - include: expr
+
+  search:
+    - include: exit_block
+    - include: exit_clause
+    - include: comment
+    - include: start_record
+    - include: start_not
+    - include: if_then_else
+    - include: filter
+    - include: misc_syntax
+    - include: expr
+
+  not:
+    - include: comment
+    - include: stop_not
+    - include: start_record
+    - include: filter
+    - include: misc_syntax
+
+  action:
+    - include: exit_block
+    - include: exit_clause
+    - include: comment
+    - include: start_record
+    - include: update
+    - include: misc_syntax
+    - include: constants
+
+    - match: 'none'
+      scope: constant.language.eve
+
+  string:
+    - meta_scope: string.quoted.double.eve
+    - include: start_interpolation
+    - include: stop_string
+    - match: '\\.'
+      scope: constant.character.escape.eve
+
+  interpolation:
+    - clear_scopes: true
+    - meta_scope: source.eve
+    - include: comment
+    - include: stop_interpolation
+    - include: start_record
+    - include: misc_syntax
+    - include: expr
