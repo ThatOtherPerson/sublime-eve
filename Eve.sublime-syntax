@@ -118,7 +118,7 @@ contexts:
       scope: 'keyword.operator.update.eve'
 
   misc_syntax:
-    - match: '[:.]'
+    - match: '[\[:.\]]'
 
   constants:
     - match: 'true|false'
