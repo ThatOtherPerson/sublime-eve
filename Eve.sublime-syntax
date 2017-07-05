@@ -11,20 +11,29 @@ variables:
 
 contexts:
   main:
-    - match: '^(```|~~~)$'
+    - match: '^\s*(```|~~~)\s*(?:eve)?\s*$'
       scope: keyword.other.eve
       push: block
+
+    - match: '^\s*(```|~~~).*$'
+      scope: keyword.codeblock.eve
+      push: other_block
+
+  other_block:
+    - match: '^\s*(```|~~~).*$'
+      scope: keyword.codeblock.eve
+      pop: true
 
   block:
     - meta_scope: meta.block.eve
 
     - include: comment
 
-    - match: '^(```|~~~)$'
+    - match: '^\s*(```|~~~)\s*$'
       scope: keyword.other.eve
       pop: true
 
-    - match: 'search'
+    - match: '^\s*search'
       scope: keyword.section.search.eve
       push: search
 
@@ -109,7 +118,7 @@ contexts:
       scope: 'keyword.operator.update.eve'
 
   misc_syntax:
-    - match: '[:.]'
+    - match: '[\[:.\]]'
 
   constants:
     - match: 'true|false'
@@ -128,7 +137,7 @@ contexts:
       pop: true
 
   exit_block:
-    - match: '(?=^(```|~~~)$)'
+    - match: '(?=^\s*(```|~~~)\s*$)'
       scope: keyword.other.eve
       pop: true
 
@@ -144,8 +153,8 @@ contexts:
 
   search:
     - include: exit_block
-    - include: exit_clause
     - include: comment
+    - include: exit_clause
     - include: start_record
     - include: start_not
     - include: if_then_else
@@ -162,8 +171,8 @@ contexts:
 
   action:
     - include: exit_block
-    - include: exit_clause
     - include: comment
+    - include: exit_clause
     - include: start_record
     - include: update
     - include: misc_syntax
