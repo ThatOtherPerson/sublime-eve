@@ -15,6 +15,15 @@ contexts:
       scope: keyword.other.eve
       push: block
 
+    - match: '^\s*(```|~~~).*$'
+      scope: keyword.codeblock.eve
+      push: other_block
+
+  other_block:
+    - match: '^\s*(```|~~~).*$'
+      scope: keyword.codeblock.eve
+      pop: true
+
   block:
     - meta_scope: meta.block.eve
 
