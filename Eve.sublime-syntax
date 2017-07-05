@@ -11,7 +11,7 @@ variables:
 
 contexts:
   main:
-    - match: '^(```|~~~)$'
+    - match: '^\s*(```|~~~)\s*(?:eve)?\s*$'
       scope: keyword.other.eve
       push: block
 
@@ -20,7 +20,7 @@ contexts:
 
     - include: comment
 
-    - match: '^(```|~~~)$'
+    - match: '^\s*(```|~~~)\s*$'
       scope: keyword.other.eve
       pop: true
 
@@ -128,7 +128,7 @@ contexts:
       pop: true
 
   exit_block:
-    - match: '(?=^(```|~~~)$)'
+    - match: '(?=^\s*(```|~~~)\s*$)'
       scope: keyword.other.eve
       pop: true
 
