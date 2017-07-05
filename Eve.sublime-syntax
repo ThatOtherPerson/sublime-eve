@@ -33,7 +33,7 @@ contexts:
       scope: keyword.other.eve
       pop: true
 
-    - match: 'search'
+    - match: '^\s*search'
       scope: keyword.section.search.eve
       push: search
 
@@ -153,8 +153,8 @@ contexts:
 
   search:
     - include: exit_block
-    - include: exit_clause
     - include: comment
+    - include: exit_clause
     - include: start_record
     - include: start_not
     - include: if_then_else
@@ -171,8 +171,8 @@ contexts:
 
   action:
     - include: exit_block
-    - include: exit_clause
     - include: comment
+    - include: exit_clause
     - include: start_record
     - include: update
     - include: misc_syntax
